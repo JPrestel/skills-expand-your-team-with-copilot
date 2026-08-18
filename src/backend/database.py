@@ -30,6 +30,15 @@ def init_database():
         for teacher in initial_teachers:
             teachers_collection.insert_one({"_id": teacher["username"], **teacher})
 
+    for name, details in initial_activities.items():
+        if "difficulty" not in details:
+            continue
+
+        activities_collection.update_one(
+            {"_id": name, "difficulty": {"$exists": False}},
+            {"$set": {"difficulty": details["difficulty"]}}
+        )
+
 # Initial database if empty
 initial_activities = {
     "Chess Club": {
@@ -45,6 +54,7 @@ initial_activities = {
     },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
+        "difficulty": "Beginner",
         "schedule": "Tuesdays and Thursdays, 7:00 AM - 8:00 AM",
         "schedule_details": {
             "days": ["Tuesday", "Thursday"],
@@ -67,6 +77,7 @@ initial_activities = {
     },
     "Soccer Team": {
         "description": "Join the school soccer team and compete in matches",
+        "difficulty": "Intermediate",
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 5:30 PM",
         "schedule_details": {
             "days": ["Tuesday", "Thursday"],
@@ -144,6 +155,7 @@ initial_activities = {
     },
     "Science Olympiad": {
         "description": "Weekend science competition preparation for regional and state events",
+        "difficulty": "Advanced",
         "schedule": "Saturdays, 1:00 PM - 4:00 PM",
         "schedule_details": {
             "days": ["Saturday"],
