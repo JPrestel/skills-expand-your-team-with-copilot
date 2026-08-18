@@ -32,6 +32,21 @@
   --info-light: #d1ecf1;
 }
 
+body[data-theme="dark"] {
+  --background: #111827;
+  --surface: #1f2937;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --border: #374151;
+  --border-light: #4b5563;
+  --border-focus: #6b7280;
+  --success-light: #16321a;
+  --warning-light: #3a2a00;
+  --error-light: #3d1414;
+  --info-light: #10313c;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -48,6 +63,7 @@ body {
   padding: 12px;
   background-color: var(--background);
   font-size: 0.9rem;
+  color-scheme: light;
 }
 
 header {
@@ -287,6 +303,42 @@ section h3 {
   border: none;
 }
 
+.social-share-container {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.social-share-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-light);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.share-button:hover {
+  background-color: var(--primary);
+}
+
 button {
   background-color: var(--primary);
   color: white;
@@ -487,11 +539,23 @@ footer {
   flex: 1;
   min-width: 0; /* Add this to prevent input from overflowing */
   padding: 6px 10px;
+  background-color: var(--surface);
+  color: var(--text-primary);
   border: 1px solid var(--border);
   border-right: none;
   border-radius: 20px 0 0 20px;
   font-size: 0.85rem;
   transition: all 0.3s ease;
+}
+
+input {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+input::placeholder {
+  color: var(--text-secondary);
 }
 
 .search-box input:focus {
@@ -621,6 +685,9 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #user-status {

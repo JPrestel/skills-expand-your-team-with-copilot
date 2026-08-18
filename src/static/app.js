@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeToggleIcon = document.getElementById("theme-toggle-icon");
+  const themeToggleLabel = document.getElementById("theme-toggle-label");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -45,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+  let currentTheme = "light";
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -52,6 +56,26 @@ document.addEventListener("DOMContentLoaded", () => {
     afternoon: { start: "15:00", end: "18:00" }, // After school hours
     weekend: { days: ["Saturday", "Sunday"] }, // Weekend days
   };
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    document.body.dataset.theme = theme;
+    const isDarkMode = theme === "dark";
+    themeToggle.setAttribute("aria-pressed", isDarkMode.toString());
+    themeToggleIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    themeToggleLabel.textContent = isDarkMode ? "Light mode" : "Dark mode";
+  }
+
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    applyTheme(savedTheme);
+  }
+
+  function toggleTheme() {
+    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+    localStorage.setItem("theme", nextTheme);
+  }
 
   // Initialize filters from active elements
   function initializeFilters() {
@@ -260,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Event listeners for authentication
+  themeToggle.addEventListener("click", toggleTheme);
   loginButton.addEventListener("click", openLoginModal);
   logoutButton.addEventListener("click", logout);
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
@@ -535,6 +560,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const difficultyHtml = details.difficulty
       ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
       : "";
+    const activityUrl = `${window.location.origin}/static/index.html`;
+    const shareText = `Check out ${name} at Mergington High School! ${formattedSchedule}`;
+    const encodedShareText = encodeURIComponent(shareText);
+    const encodedActivityUrl = encodeURIComponent(activityUrl);
 
     // Create activity tag
     const tagHtml = `
@@ -606,6 +635,14 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+      </div>
+      <div class="social-share-container">
+        <div class="share-label">Share with friends:</div>
+        <div class="social-share-buttons">
+          <a class="share-button" href="https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedActivityUrl}" target="_blank" rel="noopener noreferrer">X</a>
+          <a class="share-button" href="https://www.facebook.com/sharer/sharer.php?u=${encodedActivityUrl}&quote=${encodedShareText}" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodedActivityUrl}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
       </div>
     `;
 
@@ -910,6 +947,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initializeTheme();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
